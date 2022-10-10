@@ -19,7 +19,7 @@ public class Boat implements Serializable{
     private Integer id;
     private String name;
     private String brand;
-    private Integer year;
+    private Integer year_;
     private String description;
     
     @ManyToOne
@@ -52,11 +52,11 @@ public class Boat implements Serializable{
     }
 
     public Integer getYear() {
-        return year;
+        return year_;
     }
 
     public void setYear(Integer year) {
-        this.year = year;
+        this.year_ = year;
     }
 
     public String getDescription() {

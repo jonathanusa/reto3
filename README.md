@@ -22,9 +22,11 @@ or
 > git clone https://github.com/jonathanusa/reto3.git
 
 6. We compile the code to verify that everything is correct and we wait for a **BUILD SUCCESS**
+> cd <directory>
 > mvn clean package -DskipTests
 
 7. Command to run the application on the server
-> sudo java -jar -Dspring.profiles.active=<properties profile p.e. prod> <filename>.jar
-> sudo java -jar -Dspring.profiles.active=prod reto3.jar
+> cd target
+> sudo java -jar -Dspring.profiles.active=<properties profile p.e. dev> <filename>.jar
+> sudo java -jar -Dspring.profiles.active=dev reto3-0.0.1-SNAPSHOT.jar
 
