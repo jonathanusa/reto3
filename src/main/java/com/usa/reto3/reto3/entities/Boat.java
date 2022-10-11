@@ -74,6 +74,4 @@ public class Boat implements Serializable{
     public void setCategory(Category category) {
         this.category = category;
     }
-    
-    
 }
