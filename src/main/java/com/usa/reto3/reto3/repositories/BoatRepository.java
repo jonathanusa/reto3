@@ -13,16 +13,16 @@ public class BoatRepository {
     @Autowired
     private BoatCrudRepository boatCrudRepository;
     
-    // Retorna todos los botes de la tabla boat
+    // Retorna todos los elementos de la tabla boat
     public List<Boat> getAll(){ return (List<Boat>) boatCrudRepository.findAll(); }
     
-    // Retorna un bote que refiera al identificador id de la tabla boat
+    // Retorna un elemento que refiera al identificador id de la tabla boat
     public Optional<Boat> getBoat( int id ) { return boatCrudRepository.findById(id); }
     
-    // Guarda un bote en la tabla boat
+    // Guarda un elemento en la tabla boat
     public Boat save( Boat boat ) { return boatCrudRepository.save(boat); }
     
-    // Borra un bote de la tabla boat
+    // Borra un elemento de la tabla boat
     public void delete( Boat boat ) { boatCrudRepository.delete(boat); } 
     
 }

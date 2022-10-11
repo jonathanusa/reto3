@@ -1,7 +1,7 @@
 package com.usa.reto3.reto3.controllers;
 
-import com.usa.reto3.reto3.entities.Category;
-import com.usa.reto3.reto3.services.CategoryService;
+import com.usa.reto3.reto3.entities.Message;
+import com.usa.reto3.reto3.services.MessageService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,40 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/Category")
-public class CategoryController {
-
+@RequestMapping("/api/Message")
+public class MessageController {
+    
     @Autowired
-    private CategoryService categoryService;
-
+    private MessageService messageService;
+    
     // Endpoint para retornar todos los elementos de la tabla
     @GetMapping("/all")
-    public List<Category> getCategories() {
-        return categoryService.getAll();
-    }
-
+    public List<Message> getMessages(){ return messageService.getAll(); }
+    
     // Endpoint para retornar un elemento particular de la tabla
     @GetMapping("/{id}")
-    public Optional<Category> getCategory(@PathVariable("id") int categoryId) {
-        return categoryService.getCategory(categoryId);
+    public Optional<Message> getMessage( @PathVariable("id") int messageId ){
+        return messageService.getMessage(messageId);
     }
-
+    
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category save(@RequestBody Category category) {
-        return categoryService.save(category);
-    }
-
+    public Message save( @RequestBody Message message ){ return messageService.save(message); }
+    
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category update(@RequestBody Category category) {
-        return categoryService.update(category);
-    }
-
+    public Message update( @RequestBody Message message ){ return messageService.update(message); }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public boolean delete(@PathVariable("id") int categoryId) {
-        return categoryService.deleteCategory(categoryId);
+    public boolean delete( @PathVariable("id") int messageId ){
+        return messageService.deleteMessage(messageId);
     }
-
+    
 }

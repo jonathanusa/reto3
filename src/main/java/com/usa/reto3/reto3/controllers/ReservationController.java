@@ -1,7 +1,7 @@
 package com.usa.reto3.reto3.controllers;
 
-import com.usa.reto3.reto3.entities.Category;
-import com.usa.reto3.reto3.services.CategoryService;
+import com.usa.reto3.reto3.entities.Reservation;
+import com.usa.reto3.reto3.services.ReservationService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,40 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/Category")
-public class CategoryController {
-
+@RequestMapping("/api/Reservation")
+public class ReservationController {
+    
     @Autowired
-    private CategoryService categoryService;
-
+    private ReservationService reservationService;
+    
     // Endpoint para retornar todos los elementos de la tabla
     @GetMapping("/all")
-    public List<Category> getCategories() {
-        return categoryService.getAll();
-    }
-
+    public List<Reservation> getReservations(){ return reservationService.getAll(); }
+    
     // Endpoint para retornar un elemento particular de la tabla
     @GetMapping("/{id}")
-    public Optional<Category> getCategory(@PathVariable("id") int categoryId) {
-        return categoryService.getCategory(categoryId);
+    public Optional<Reservation> getReservation( @PathVariable("id") int reservationId ){
+        return reservationService.getReservation(reservationId);
     }
-
+    
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category save(@RequestBody Category category) {
-        return categoryService.save(category);
-    }
-
+    public Reservation save( @RequestBody Reservation reservation ){ return reservationService.save(reservation); }
+    
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category update(@RequestBody Category category) {
-        return categoryService.update(category);
-    }
-
+    public Reservation update( @RequestBody Reservation reservation ){ return reservationService.update(reservation); }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public boolean delete(@PathVariable("id") int categoryId) {
-        return categoryService.deleteCategory(categoryId);
+    public boolean delete( @PathVariable("id") int reservationId ){
+        return reservationService.deleteReservation(reservationId);
     }
-
+    
 }

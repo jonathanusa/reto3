@@ -1,7 +1,7 @@
 package com.usa.reto3.reto3.controllers;
 
-import com.usa.reto3.reto3.entities.Category;
-import com.usa.reto3.reto3.services.CategoryService;
+import com.usa.reto3.reto3.entities.Admin;
+import com.usa.reto3.reto3.services.AdminService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,40 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/Category")
-public class CategoryController {
-
+@RequestMapping("/api/Admin")
+public class AdminController {
+    
     @Autowired
-    private CategoryService categoryService;
-
+    private AdminService adminService;
+    
     // Endpoint para retornar todos los elementos de la tabla
     @GetMapping("/all")
-    public List<Category> getCategories() {
-        return categoryService.getAll();
-    }
-
+    public List<Admin> getAdmins(){ return adminService.getAll(); }
+    
     // Endpoint para retornar un elemento particular de la tabla
     @GetMapping("/{id}")
-    public Optional<Category> getCategory(@PathVariable("id") int categoryId) {
-        return categoryService.getCategory(categoryId);
+    public Optional<Admin> getAdmin( @PathVariable("id") int adminId ){
+        return adminService.getAdmin(adminId);
     }
-
+    
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category save(@RequestBody Category category) {
-        return categoryService.save(category);
-    }
-
+    public Admin save( @RequestBody Admin admin ){ return adminService.save(admin); }
+    
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category update(@RequestBody Category category) {
-        return categoryService.update(category);
-    }
-
+    public Admin update( @RequestBody Admin admin ){ return adminService.update(admin); }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public boolean delete(@PathVariable("id") int categoryId) {
-        return categoryService.deleteCategory(categoryId);
+    public boolean delete( @PathVariable("id") int adminId ){
+        return adminService.deleteAdmin(adminId);
     }
-
+    
 }

@@ -2,12 +2,15 @@ package com.usa.reto3.reto3.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +29,30 @@ public class Boat implements Serializable{
     @JoinColumn(name="categoryId")
     @JsonIgnoreProperties("boats") // Se ignora la lista de boats en clase Category para evitar ciclo infinito
     private Category category;
+    
+    @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "boat")
+    @JsonIgnoreProperties("boats") // Se ignora la lista de boats en clase Mesage para evitar ciclo infinito
+    private List<Message> messages;
+    
+    @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "boat")
+    @JsonIgnoreProperties("boats") // Se ignora la lista de boats en clase Reservation para evitar ciclo infinito
+    private List<Reservation> reservations;
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 
     public Integer getId() {
         return id;
@@ -74,6 +101,4 @@ public class Boat implements Serializable{
     public void setCategory(Category category) {
         this.category = category;
     }
-    
-    
 }

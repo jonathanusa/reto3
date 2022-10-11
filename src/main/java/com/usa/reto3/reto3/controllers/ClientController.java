@@ -1,7 +1,7 @@
 package com.usa.reto3.reto3.controllers;
 
-import com.usa.reto3.reto3.entities.Category;
-import com.usa.reto3.reto3.services.CategoryService;
+import com.usa.reto3.reto3.entities.Client;
+import com.usa.reto3.reto3.services.ClientService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,40 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/Category")
-public class CategoryController {
-
+@RequestMapping("/api/Client")
+public class ClientController {
+    
     @Autowired
-    private CategoryService categoryService;
-
+    private ClientService clientService;
+    
     // Endpoint para retornar todos los elementos de la tabla
     @GetMapping("/all")
-    public List<Category> getCategories() {
-        return categoryService.getAll();
-    }
-
+    public List<Client> getClients(){ return clientService.getAll(); }
+    
     // Endpoint para retornar un elemento particular de la tabla
     @GetMapping("/{id}")
-    public Optional<Category> getCategory(@PathVariable("id") int categoryId) {
-        return categoryService.getCategory(categoryId);
+    public Optional<Client> getClient( @PathVariable("id") int clientId ){
+        return clientService.getClient(clientId);
     }
-
+    
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category save(@RequestBody Category category) {
-        return categoryService.save(category);
-    }
-
+    public Client save( @RequestBody Client client ){ return clientService.save(client); }
+    
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category update(@RequestBody Category category) {
-        return categoryService.update(category);
-    }
-
+    public Client update( @RequestBody Client client ){ return clientService.update(client); }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public boolean delete(@PathVariable("id") int categoryId) {
-        return categoryService.deleteCategory(categoryId);
+    public boolean delete( @PathVariable("id") int clientId ){
+        return clientService.deleteClient(clientId);
     }
-
+    
 }

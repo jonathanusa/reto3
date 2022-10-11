@@ -55,7 +55,5 @@ public class Category implements Serializable{
 
     public void setBoats(List<Boat> boats) {
         this.boats = boats;
-    }
-    
-    
+    }  
 }

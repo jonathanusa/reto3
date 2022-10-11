@@ -13,17 +13,17 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    // Retorna todas las categorias de la tabla category
+    // Retorna todos los elementos de la tabla category
     public List<Category> getAll() {
         return categoryRepository.getAll();
     }
 
-    // Retorna una categoria que refiera al identificador id de la tabla category
+    // Retorna un elemento que refiera al identificador id de la tabla category
     public Optional<Category> getCategory(int id) {
         return categoryRepository.getCategory(id);
     }
 
-    // Guarda una categoria en la tabla category
+    // Guarda un elemento en la tabla category
     public Category save(Category category) {
 
         if (category.getId() == null) {
@@ -38,7 +38,7 @@ public class CategoryService {
         }
     }
 
-    // Actualiza una categoria en la tabla category
+    // Actualiza un elemento en la tabla category
     public Category update(Category category) {
 
         if (category.getId() != null) {
@@ -66,7 +66,7 @@ public class CategoryService {
         }
     }
 
-    // Elimina una categoria en la tabla category
+    // Elimina un elemento en la tabla category
     public boolean deleteCategory(int id) {
 
         Boolean bBoolean = getCategory(id).map(category -> {

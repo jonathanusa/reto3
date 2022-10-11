@@ -13,13 +13,13 @@ public class BoatService {
     @Autowired
     private BoatRepository boatRepository;
     
-    // Retorna todos los botes de la tabla boat
+    // Retorna todos los elementos de la tabla boat
     public List<Boat> getAll() { return boatRepository.getAll(); }
     
-    // Retorna un bote que refiera al identificador id de la tabla boat
+    // Retorna un elemento que refiera al identificador id de la tabla boat
     public Optional<Boat> getBoat( int id ) { return boatRepository.getBoat(id); }
     
-    // Guarda un bote en la tabla boat
+    // Guarda un elemento en la tabla boat
     public Boat save( Boat boat ) { 
         
         if (boat.getId() == null) {
@@ -32,7 +32,7 @@ public class BoatService {
         }
     }
     
-    // Actualiza un bote en la tabla boat
+    // Actualiza un elemento en la tabla boat
     public Boat update ( Boat boat ){
         
         if( boat.getId() != null ){
@@ -61,7 +61,7 @@ public class BoatService {
         }
     }
     
-    // Elimina un bote en la tabla boat
+    // Elimina un elemento en la tabla boat
     public boolean deleteBoat( int id ){
         
         Boolean bBoolean = getBoat(id).map( boat -> {

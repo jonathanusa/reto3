@@ -1,7 +1,7 @@
 package com.usa.reto3.reto3.controllers;
 
-import com.usa.reto3.reto3.entities.Category;
-import com.usa.reto3.reto3.services.CategoryService;
+import com.usa.reto3.reto3.entities.Score;
+import com.usa.reto3.reto3.services.ScoreService;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,40 +19,34 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/Category")
-public class CategoryController {
-
+@RequestMapping("/api/Score")
+public class ScoreController {
+    
     @Autowired
-    private CategoryService categoryService;
-
+    private ScoreService scoreService;
+    
     // Endpoint para retornar todos los elementos de la tabla
     @GetMapping("/all")
-    public List<Category> getCategories() {
-        return categoryService.getAll();
-    }
-
+    public List<Score> getScores(){ return scoreService.getAll(); }
+    
     // Endpoint para retornar un elemento particular de la tabla
     @GetMapping("/{id}")
-    public Optional<Category> getCategory(@PathVariable("id") int categoryId) {
-        return categoryService.getCategory(categoryId);
+    public Optional<Score> getScore( @PathVariable("id") int scoreId ){
+        return scoreService.getScore(scoreId);
     }
-
+    
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category save(@RequestBody Category category) {
-        return categoryService.save(category);
-    }
-
+    public Score save( @RequestBody Score score ){ return scoreService.save(score); }
+    
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category update(@RequestBody Category category) {
-        return categoryService.update(category);
-    }
-
+    public Score update( @RequestBody Score score ){ return scoreService.update(score); }
+    
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public boolean delete(@PathVariable("id") int categoryId) {
-        return categoryService.deleteCategory(categoryId);
+    public boolean delete( @PathVariable("id") int scoreId ){
+        return scoreService.deleteScore(scoreId);
     }
-
+    
 }
