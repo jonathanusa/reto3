@@ -31,11 +31,11 @@ public class Client implements Serializable {
     @JsonIgnoreProperties("client") // Se ignora la lista de clients en clase Reservation para evitar ciclo infinito
     private List<Reservation> reservations;
 
-    public Integer getId() {
+    public Integer getIdClient() {
         return idClient;
     }
 
-    public void setId(Integer idClient) {
+    public void setIdClient(Integer idClient) {
         this.idClient = idClient;
     }
 

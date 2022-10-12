@@ -29,11 +29,11 @@ public class Message implements Serializable {
     @JsonIgnoreProperties("messages") // Se ignora el atributo messages en clase Boat para evitar ciclo infinito
     private Boat boat;
 
-    public Integer getId() {
+    public Integer getIdMessage() {
         return idMessage;
     }
 
-    public void setId(Integer idMessage) {
+    public void setIdMessage(Integer idMessage) {
         this.idMessage = idMessage;
     }
 

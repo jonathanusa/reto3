@@ -2,7 +2,7 @@ package com.usa.reto3.reto3.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,13 +18,13 @@ public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idReservation;
-    private Date startDate;
-    private Date devolutionDate;
+    private LocalDate startDate;
+    private LocalDate devolutionDate;
     private String status;
     
     @ManyToOne
     @JoinColumn(name = "clientID")
-    @JsonIgnoreProperties("reservations") // Se ignora el atributo reservations en clase Client para evitar ciclo infinito
+    @JsonIgnoreProperties({"reservations","messages"}) // Se ignora el atributo reservations en clase Client para evitar ciclo infinito
     private Client client;
     
     @ManyToOne
@@ -32,33 +32,32 @@ public class Reservation implements Serializable {
     @JsonIgnoreProperties("reservations") // Se ignora el atributo reservations en clase Boat para evitar ciclo infinito
     private Boat boat;
     
-    
     @ManyToOne
     @JoinColumn(name = "scoreID")
-    @JsonIgnoreProperties("reservation") // Se ignora el atributo reservation en clase Score para evitar ciclo infinito
+    @JsonIgnoreProperties("reservations") // Se ignora el atributo reservation en clase Score para evitar ciclo infinito
     private Score score;
     
-    public Integer getId() {
+    public Integer getIdReservation() {
         return idReservation;
     }
 
-    public void setId(Integer idReservation) {
+    public void setIdReservation(Integer idReservation) {
         this.idReservation = idReservation;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getDevolutionDate() {
+    public LocalDate getDevolutionDate() {
         return devolutionDate;
     }
 
-    public void setDevolutionDate(Date devolutionDate) {
+    public void setDevolutionDate(LocalDate devolutionDate) {
         this.devolutionDate = devolutionDate;
     }
 
