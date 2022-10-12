@@ -21,12 +21,12 @@ public class Message implements Serializable {
     
     @ManyToOne
     @JoinColumn(name = "clientID")
-    @JsonIgnoreProperties("messages") // Se ignora el atributo messages en clase Client para evitar ciclo infinito
+    @JsonIgnoreProperties({"messages","reservations"}) // Se ignora el atributo messages en clase Client para evitar ciclo infinito
     private Client client;
     
     @ManyToOne
     @JoinColumn(name = "boatID")
-    @JsonIgnoreProperties("messages") // Se ignora el atributo messages en clase Boat para evitar ciclo infinito
+    @JsonIgnoreProperties({"messages","reservations"}) // Se ignora el atributo messages en clase Boat para evitar ciclo infinito
     private Boat boat;
 
     public Integer getIdMessage() {
