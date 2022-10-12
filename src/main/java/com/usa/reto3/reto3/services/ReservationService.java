@@ -3,6 +3,7 @@ package com.usa.reto3.reto3.services;
 import com.usa.reto3.reto3.entities.Reservation;
 import com.usa.reto3.reto3.repositories.ReservationRepository;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class ReservationService {
             reservation.setStatus("created");
             
             if (reservation.getStartDate()== null){
-                LocalDate current_time = LocalDate.now();
+                Date current_time = new Date();
                 reservation.setStartDate(current_time);
             }
             return reservationRepository.save(reservation);
