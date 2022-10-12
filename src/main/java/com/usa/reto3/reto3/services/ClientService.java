@@ -22,11 +22,11 @@ public class ClientService {
     // Guarda un elemento en la tabla client
     public Client save( Client client ) { 
         
-        if (client.getId() == null) {
+        if (client.getIdClient()== null) {
             return clientRepository.save(client);
         }
         else{
-            Optional<Client> b = clientRepository.getClient(client.getId());
+            Optional<Client> b = clientRepository.getClient(client.getIdClient());
             if ( b.isEmpty() ){ return clientRepository.save(client); }
             else{ return client; }
         }
@@ -35,9 +35,9 @@ public class ClientService {
     // Actualiza un elemento en la tabla client
     public Client update ( Client client ){
         
-        if( client.getId() != null ){
+        if( client.getIdClient()!= null ){
             
-            Optional<Client> b = clientRepository.getClient(client.getId());
+            Optional<Client> b = clientRepository.getClient(client.getIdClient());
             
             if( !b.isEmpty() ){
                 

@@ -31,28 +31,12 @@ public class Boat implements Serializable{
     private Category category;
     
     @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "boat")
-    @JsonIgnoreProperties("boats") // Se ignora la lista de boats en clase Mesage para evitar ciclo infinito
+    @JsonIgnoreProperties({"boat","client"}) // Se ignora la variable boat en clase Message para evitar ciclo infinito
     private List<Message> messages;
     
     @OneToMany(cascade = {CascadeType.PERSIST}, mappedBy = "boat")
-    @JsonIgnoreProperties("boats") // Se ignora la lista de boats en clase Reservation para evitar ciclo infinito
+    @JsonIgnoreProperties("boat") // Se ignora la variable boat en clase Reservation para evitar ciclo infinito
     private List<Reservation> reservations;
-
-    public List<Message> getMessages() {
-        return messages;
-    }
-
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-    }
-
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
 
     public Integer getId() {
         return id;
@@ -100,5 +84,21 @@ public class Boat implements Serializable{
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+    
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }

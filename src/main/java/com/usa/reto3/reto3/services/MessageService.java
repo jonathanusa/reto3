@@ -22,11 +22,11 @@ public class MessageService {
     // Guarda un elemento en la tabla message
     public Message save( Message message ) { 
         
-        if (message.getId() == null) {
+        if (message.getIdMessage() == null) {
             return messageRepository.save(message);
         }
         else{
-            Optional<Message> b = messageRepository.getMessage(message.getId());
+            Optional<Message> b = messageRepository.getMessage(message.getIdMessage());
             if ( b.isEmpty() ){ return messageRepository.save(message); }
             else{ return message; }
         }
@@ -35,9 +35,9 @@ public class MessageService {
     // Actualiza un elemento en la tabla message
     public Message update ( Message message ){
         
-        if( message.getId() != null ){
+        if( message.getIdMessage() != null ){
             
-            Optional<Message> b = messageRepository.getMessage(message.getId());
+            Optional<Message> b = messageRepository.getMessage(message.getIdMessage());
             
             if( !b.isEmpty() ){
                 

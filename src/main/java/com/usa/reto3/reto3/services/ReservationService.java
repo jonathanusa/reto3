@@ -2,6 +2,7 @@ package com.usa.reto3.reto3.services;
 
 import com.usa.reto3.reto3.entities.Reservation;
 import com.usa.reto3.reto3.repositories.ReservationRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,17 @@ public class ReservationService {
     // Guarda un elemento en la tabla reservation
     public Reservation save( Reservation reservation ) { 
         
-        if (reservation.getId() == null) {
+        if (reservation.getIdReservation()== null) {
+            reservation.setStatus("created");
+            
+            if (reservation.getStartDate()!= null){
+                LocalDate current_time = LocalDate.now();
+                reservation.setStartDate(current_time);
+            }
             return reservationRepository.save(reservation);
         }
         else{
-            Optional<Reservation> b = reservationRepository.getReservation(reservation.getId());
+            Optional<Reservation> b = reservationRepository.getReservation(reservation.getIdReservation());
             if ( b.isEmpty() ){ return reservationRepository.save(reservation); }
             else{ return reservation; }
         }
@@ -35,9 +42,9 @@ public class ReservationService {
     // Actualiza un elemento en la tabla reservation
     public Reservation update ( Reservation reservation ){
         
-        if( reservation.getId() != null ){
+        if( reservation.getIdReservation()!= null ){
             
-            Optional<Reservation> b = reservationRepository.getReservation(reservation.getId());
+            Optional<Reservation> b = reservationRepository.getReservation(reservation.getIdReservation());
             
             if( !b.isEmpty() ){
                 
