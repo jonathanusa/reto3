@@ -3,7 +3,7 @@ package com.usa.reto3.reto3.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,8 +20,8 @@ public class Reservation implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idReservation;
-    private LocalDate startDate;
-    private LocalDate devolutionDate;
+    private Date startDate;
+    private Date devolutionDate;
     private String status;
     
     @ManyToOne
@@ -47,19 +47,19 @@ public class Reservation implements Serializable {
         this.idReservation = idReservation;
     }
 
-    public LocalDate getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getDevolutionDate() {
+    public Date getDevolutionDate() {
         return devolutionDate;
     }
 
-    public void setDevolutionDate(LocalDate devolutionDate) {
+    public void setDevolutionDate(Date devolutionDate) {
         this.devolutionDate = devolutionDate;
     }
 
