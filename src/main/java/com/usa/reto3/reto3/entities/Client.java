@@ -1,6 +1,7 @@
 package com.usa.reto3.reto3.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
+@JsonPropertyOrder({"idClient","email","password", "name", "age", "category", "messages", "reservations"})
 @Table(name = "client")
 public class Client implements Serializable {
     
