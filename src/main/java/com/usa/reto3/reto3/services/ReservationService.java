@@ -26,7 +26,7 @@ public class ReservationService {
         if (reservation.getIdReservation()== null) {
             reservation.setStatus("created");
             
-            if (reservation.getStartDate()!= null){
+            if (reservation.getStartDate()== null){
                 LocalDate current_time = LocalDate.now();
                 reservation.setStartDate(current_time);
             }

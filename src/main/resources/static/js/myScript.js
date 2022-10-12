@@ -1,4 +1,4 @@
-URL_SERVER = "http://localhost:80"
+URL_SERVER = "http://localhost:8080"
 
 // Función para cargar las vistas de cada tabla de manera independiente
 function direccionarPagina(id_pag){
