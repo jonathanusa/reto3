@@ -2,7 +2,7 @@ URL_SERVER = "http://localhost:8080"
 
 // Función para cargar las vistas de cada tabla de manera independiente
 function direccionarPagina(id_pag){
-    let page_name = ["barcos.html", "categorias.html", "clientes.html", "mensajes.html", "reservaciones.html", "calificaciones.html", "usuariosAdmin.html"];
+    let page_name = ["barcos.html", "categorias.html", "clientes.html", "mensajes.html", "reservaciones.html", "usuariosAdmin.html"];
     $( "#includeContent" ).load( page_name[id_pag], function( response, status, xhr ) {
 
         if( page_name[id_pag] == "barcos.html" ){
@@ -132,6 +132,25 @@ function direccionarPagina(id_pag){
                     console.log('Petición completada');
                 }
             });
+
+            var flag_score = false
+
+            $.ajax({
+                url : URL_SERVER + "/api/Score/" + "all",
+                type : 'GET',
+                dataType : 'JSON',
+                success : function(respuesta) {
+                    if( !respuesta.length ){
+                        fillScoreTable(0);
+                    }          
+                },
+                error : function(xhr, status) {
+                    alert('Ha sucedido un problema de lectura');
+                },
+                complete : function(xhr, status) {
+                    console.log('Petición completada');
+                }
+            });
         }
         
     });
@@ -144,6 +163,44 @@ function direccionarPagina(id_pag){
             $("#pes_"+index).attr({'style':'background-color: #333'})
         }        
     }   
+}
+
+function fillScoreTable(index){
+
+    if( index > 5 ){
+        console.log('Tabla score inicializada correctamente')
+        return;
+    }
+
+    else{
+
+        let myData ={
+            score: index
+        };
+
+        let dataToSend = JSON.stringify(myData);
+
+        $.ajax({
+    // #
+            url : URL_SERVER + "/api/Score/" + "save",
+            type : 'POST',
+            dataType: '',
+            data: dataToSend,
+            contentType: 'application/json',
+
+            success : function(result,status,xhr) {
+    // #
+                console.log('Guardado exitoso de score ', index);
+            },
+            error : function(xhr,status,error) {
+                alert('Ha sucedido un problema en guardar un registro en la tabla');
+            },
+            complete : function(result,status) {
+                console.log('Guardado completado');
+                fillScoreTable(++index);
+            }
+        });
+    }
 }
 
 /****************************
@@ -548,5 +605,215 @@ function postMessage(){
     }
     else{
         alert("Ingrese un mensaje para registrar en el sistema")
+    }
+}
+
+/***********************************
+** METODOS DE LA TABLA RESERVATION *
+************************************/
+// Petición GET
+
+// #
+function getReservation(){
+    $.ajax({
+// #
+        url : URL_SERVER + "/api/Reservation/" + "all",
+        type : 'GET',
+        dataType : 'JSON',
+        success : function(respuesta) {
+            alert('Lectura de la tabla realizada con éxito');
+            const listaOrdenada = respuesta.sort(function(a, b){return a.id - b.id });
+// #        
+            listarReservaciones(listaOrdenada);
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema en lectura de la tabla');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición completada');
+        }
+    });
+}
+
+// Función para crear una tabla con los elementos ordenados en la vista
+
+// #
+function listarReservaciones(items){
+    let myTable =  '<tr>\
+                        <th>ID</th>\
+                        <th>START DATE</th>\
+                        <th>DEVOLUTION DATE</th>\
+                        <th>STATUS</th>\
+                        <th>BOAT</th>\
+                        <th>CLIENT</th>\
+                        <th>SCORE</th>\
+                    </tr>';
+// #
+    $("#reservationTable").empty();
+
+    for ( i = 0; i < items.length; i++) {
+        myTable += "<tr>";
+        myTable += "<td>" + items[i].idReservation + "</td>";
+        myTable += "<td>" + items[i].startDate + "</td>";
+        myTable += "<td>" + items[i].devolutionDate + "</td>";
+        myTable += "<td>" + items[i].status + "</td>";
+        myTable += "<td>" + "<strong>name: </strong>" + items[i].boat.name
+                          + "</td>";
+        myTable += "<td>" + "<strong>name: </strong>" + items[i].client.name + "; " 
+                          + "<strong>email: </strong>" + items[i].client.email
+                          + "</td>";
+        
+        if( items[i].score == null ){
+            myTable += "<td>" + "N/A" + "</td>";
+        }
+        else{
+            myTable += "<td>" + items[i].score.score + "</td>";
+        }
+        myTable += "</tr>";
+    }
+// #
+    $("#reservationTable").append(myTable);
+}
+
+// POST
+
+// #
+function postReservation(){
+
+// #
+    // Definición estructura de datos para recuperar valores desde el html
+    var score_selector = $("#selector_score option:selected").val();
+    let myData;
+    if( score_selector == 'N/A' ){
+        myData ={
+            devolutionDate: $('#devolution_date').val(),
+            boat: { "id": parseInt( $("#selector_boats option:selected").val() , 10)},
+            client: { "idClient": parseInt( $("#selector_clients option:selected").val() , 10)},
+        };
+    }
+    else{
+        myData ={
+            devolutionDate: $('#devolution_date').val(),
+            boat: { "id": parseInt( $("#selector_boats option:selected").val() , 10)},
+            client: { "idClient": parseInt( $("#selector_clients option:selected").val() , 10)},
+            score: { "id": parseInt($("#selector_score option:selected").val(), 10)}
+        };
+    }
+    
+
+    let dataToSend = JSON.stringify(myData);
+
+    $.ajax({
+// #
+        url : URL_SERVER + "/api/Reservation/" + "save",
+        type : 'POST',
+        dataType: '',
+        data: dataToSend,
+        contentType: 'application/json',
+
+        success : function(result,status,xhr) {
+// #
+            getReservation();
+            alert('Guardado exitoso de registro en la tabla');
+        },
+        error : function(xhr,status,error) {
+            alert('Ha sucedido un problema en guardar un registro en la tabla');
+        },
+        complete : function(result,status) {
+            console.log('Guardado completado');
+        }
+    });
+}
+
+/*****************************
+** METODOS DE LA TABLA ADMIN *
+******************************/
+// Petición GET
+
+// #
+function getAdmin(){
+    $.ajax({
+// #
+        url : URL_SERVER + "/api/Admin/" + "all",
+        type : 'GET',
+        dataType : 'JSON',
+        success : function(respuesta) {
+            alert('Lectura de la tabla realizada con éxito');
+            const listaOrdenada = respuesta.sort(function(a, b){return a.id - b.id });
+// #        
+            listarAdministradores(listaOrdenada);
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema en lectura de la tabla');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición completada');
+        }
+    });
+}
+
+// Función para crear una tabla con los elementos ordenados en la vista
+
+// #
+function listarAdministradores(items){
+    let myTable =  '<tr>\
+                        <th>NAME</th>\
+                        <th>EMAIL</th>\
+                    </tr>';
+// #
+    $("#adminTable").empty();
+
+    for ( i = 0; i < items.length; i++) {
+        myTable += "<tr>";
+        myTable += "<td>" + items[i].name + "</td>";
+        myTable += "<td>" + items[i].email + "</td>";
+        myTable += "</tr>";
+    }
+// #
+    $("#adminTable").append(myTable);
+}
+
+// POST
+
+// #
+function postAdmin(){
+
+// #
+    // Definición estructura de datos para recuperar valores desde el html
+    if( $("#name").val() != '' ){
+        let myData ={
+            name: $("#name").val(),
+            email: $("#email").val(),
+            password: $("#password").val()
+        };
+
+        let dataToSend = JSON.stringify(myData);
+
+        $.ajax({
+    // #
+            url : URL_SERVER + "/api/Admin/" + "save",
+            type : 'POST',
+            dataType: '',
+            data: dataToSend,
+            contentType: 'application/json',
+
+            success : function(result,status,xhr) {
+                $("#name").val("");
+                $("#email").val("");
+                $("#password").val("");
+    // #
+                getAdmin();
+                alert('Guardado exitoso de registro en la tabla');
+            },
+            error : function(xhr,status,error) {
+                alert('Ha sucedido un problema en guardar un registro en la tabla');
+            },
+            complete : function(result,status) {
+                console.log('Guardado completado');
+            }
+        });
+    }
+    else{
+        alert("Debe ingresar al menos el nombre")
     }
 }

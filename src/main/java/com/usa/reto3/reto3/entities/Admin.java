@@ -13,17 +13,17 @@ public class Admin implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAdmin;
+    private Integer id;
     private String email;
     private String password;
     private String name; 
 
     public Integer getId() {
-        return idAdmin;
+        return id;
     }
 
     public void setId(Integer idAdmin) {
-        this.idAdmin = idAdmin;
+        this.id = idAdmin;
     }
 
     public String getEmail() {
