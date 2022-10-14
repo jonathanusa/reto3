@@ -7,10 +7,23 @@
     </tr>
     <tr>
         <td>
+            <br>
+            <label>DEVOLUTION DATE</label><br>
+            <input type="date" id="devolution_date" placeholder="devolution_date"><br><br>
             <label>BOATS:</label><br>
             <select id="selector_boats"></select><br>
             <label>CLIENTS:</label><br>
-            <select id="selector_clients"></select>
+            <select id="selector_clients"></select><br>
+            <label>SCORE:</label><br>
+            <select id="selector_score">
+                <option value="N/A" selected>Seleccione para evaluar</option>
+                <option value="1">Score 0</option>
+                <option value="2">Score 1</option>
+                <option value="3">Score 2</option>
+                <option value="4">Score 3</option>
+                <option value="5">Score 4</option>
+                <option value="6">Score 5</option>
+            </select>
             <hr>
             <button class="btnActions" onclick="postReservation()">Guardar</button>
         </td>
@@ -20,8 +33,13 @@
 <div>
     <table id="reservationTable" class="style_tables">
         <tr>
-            <th>BOATS</th>
-            <th>CLIENTS</th>
+            <th>ID</th>
+            <th>START DATE</th>
+            <th>DEVOLUTION DATE</th>
+            <th>STATUS</th>
+            <th>BOAT</th>
+            <th>CLIENT</th>
+            <th>SCORE</th>
         </tr>
     </table>
 </div>
