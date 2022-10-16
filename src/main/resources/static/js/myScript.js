@@ -6,6 +6,7 @@ function direccionarPagina(id_pag){
     $( "#includeContent" ).load( page_name[id_pag], function( response, status, xhr ) {
 
         if( page_name[id_pag] == "barcos.html" ){
+            getBoat();
             $.ajax({
                 url : URL_SERVER + "/api/Category/" + "all",
                 type : 'GET',
@@ -31,7 +32,17 @@ function direccionarPagina(id_pag){
                 }
             });
         }
+        else if( page_name[id_pag] == "categorias.html" ){
+            getCategory();
+        }
+        else if( page_name[id_pag] == "clientes.html" ){
+            getClient();
+        }
+        else if( page_name[id_pag] == "usuariosAdmin.html" ){
+            getAdmin();
+        }
         else if( page_name[id_pag] == "mensajes.html" ){
+            getMessage()
             $.ajax({
                 url : URL_SERVER + "/api/Boat/" + "all",
                 type : 'GET',
@@ -63,7 +74,7 @@ function direccionarPagina(id_pag){
                 dataType : 'JSON',
                 success : function(respuesta) {
                     if( !respuesta.length ){
-                        alert('Preferiblemente debe ingresar primero clientes para ingresar un mensaje');
+                        alert('Preferiblemente debe ingresar primero clientes antes de ingresar un mensaje');
                     }
                     var selector_obj = document.getElementById("selector_clients");
 
@@ -83,13 +94,14 @@ function direccionarPagina(id_pag){
             });
         }
         else if( page_name[id_pag] == "reservaciones.html" ){
+            getReservation();
             $.ajax({
                 url : URL_SERVER + "/api/Boat/" + "all",
                 type : 'GET',
                 dataType : 'JSON',
                 success : function(respuesta) {
                     if( !respuesta.length ){
-                        alert('Preferiblemente debe ingresar primero botes para ingresar un mensaje');
+                        alert('Preferiblemente debe ingresar primero botes antes de ingresar un mensaje');
                     }
                     var selector_obj = document.getElementById("selector_boats");
 
@@ -114,7 +126,7 @@ function direccionarPagina(id_pag){
                 dataType : 'JSON',
                 success : function(respuesta) {
                     if( !respuesta.length ){
-                        alert('Preferiblemente debe ingresar primero clientes para realizar una reserva');
+                        alert('Preferiblemente debe ingresar primero clientes antes de realizar una reserva');
                     }
                     var selector_obj = document.getElementById("selector_clients");
 
@@ -132,8 +144,6 @@ function direccionarPagina(id_pag){
                     console.log('Petición completada');
                 }
             });
-
-            var flag_score = false
 
             $.ajax({
                 url : URL_SERVER + "/api/Score/" + "all",
@@ -230,6 +240,34 @@ function getBoat(){
     });
 }
 
+// Petición GET con elemento particular
+function getBoatId( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Boat/" + id,
+        type : 'GET',
+        dataType : 'JSON',
+        success : function(respuesta) {
+
+            alert('Lectura del elemento realizada con exito');
+
+            $("#id_update").val(respuesta.id);
+
+            $("#name_update").val(respuesta.name);$('#name_update').prop('disabled', false);
+            $("#brand_update").val(respuesta.brand);$('#brand_update').prop('disabled', false);
+            $("#year_update").val(respuesta.year);$('#year_update').prop('disabled', false);
+            $("#description_update").val(respuesta.description);$('#description_update').prop('disabled', false);
+            $("#category_update").val(respuesta.category.name);
+            $('#btnUpdate').prop('disabled', false);
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema en lectura del elemento');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición de lectura de elemento completada');
+        }
+    });
+}
+
 // Función para crear una tabla con los elementos ordenados en la vista
 
 // #
@@ -240,17 +278,19 @@ function listarBarcos(items){
                         <th>YEAR</th>\
                         <th>DESCRIPTION</th>\
                         <th>CATEGORY</th>\
+                        <th>DELETE</th>\
                     </tr>';
 // #
     $("#boatTable").empty();
 
     for ( i = 0; i < items.length; i++) {
         myTable += "<tr>";
-        myTable += "<td>" + items[i].name + "</td>";
+        myTable += "<td> <a href=\"javascript:getBoatId(" + items[i].id + ");\">" + items[i].name + "</td>";
         myTable += "<td>" + items[i].brand + "</td>";
         myTable += "<td>" + items[i].year + "</td>";
         myTable += "<td>" + items[i].description + "</td>";
         myTable += "<td>" + items[i].category.name + "</td>";
+        myTable += "<td> <button class=\"btnDelete\" onclick='deleteBoat(" + items[i].id + ")'> Borrar </button></td>";
         myTable += "</tr>";
     }
 // #
@@ -305,6 +345,68 @@ function postBoat(){
     }
 }
 
+// Petición PUT
+function updateBoat(){
+
+    let myData ={
+        id: parseInt( $("#id_update").val(), 10),
+        name: $("#name_update").val(),
+        brand: $("#brand_update").val(),
+        year: parseInt( $("#year_update").val(), 10),
+        description: $("#description_update").val()
+    };
+
+    let dataToSend = JSON.stringify(myData);
+
+    $.ajax({
+        url : URL_SERVER + "/api/Boat/" + "update",
+        type : 'PUT',
+        dataType: '',
+        data: dataToSend,
+        contentType: 'application/json',
+
+        success : function(result,status,xhr) {
+            $("#id_update").val("");
+            $("#name_update").val("");$('#name_update').prop('disabled', true);
+            $("#brand_update").val("");$('#brand_update').prop('disabled', true);
+            $("#year_update").val("");$('#year_update').prop('disabled', true);
+            $("#description_update").val("");$('#description_update').prop('disabled', true);
+            $("#category_update").val("");
+
+            $('#btnUpdate').prop('disabled', true);
+
+            alert('Petición de actualización realizada con éxito');
+        },
+        error : function(xhr,status,error) {
+            alert('Ha sucedido un problema en actualizar');
+        },
+        complete : function(result,status) {
+            getBoat();
+            console.log('Actualizar completado');
+        }
+    });
+}
+
+// Petición DELETE
+function deleteBoat( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Boat/" + id,
+        type : 'DELETE',
+        dataType : 'JSON',
+        contentType: 'application/json',
+        success : function(respuesta) {
+            alert('Eliminación exitosa de registro')
+            getBoat();
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema al eliminar un registro');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición completada al eliminar un registro');
+        }
+    });
+}
+
 /********************************
 ** METODOS DE LA TABLA CATEGORY *
 *********************************/
@@ -332,6 +434,31 @@ function getCategory(){
     });
 }
 
+// Petición GET con elemento particular
+function getCategoryId( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Category/" + id,
+        type : 'GET',
+        dataType : 'JSON',
+        success : function(respuesta) {
+
+            alert('Lectura del elemento realizada con exito');
+
+            $("#id_update").val(respuesta.id);
+
+            $("#name_update").val(respuesta.name);$('#name_update').prop('disabled', false);
+            $("#description_update").val(respuesta.description);$('#description_update').prop('disabled', false);
+            $('#btnUpdate').prop('disabled', false);
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema en lectura del elemento');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición de lectura de elemento completada');
+        }
+    });
+}
+
 // Función para crear una tabla con los elementos ordenados en la vista
 
 // #
@@ -340,12 +467,13 @@ function listarCategorias(items){
                         <th>NAME</th>\
                         <th>DESCRIPTION</th>\
                         <th>BOATS</th>\
+                        <th>DELETE</th>\
                     </tr>';
     $("#categoryTable").empty();
 
     for ( i = 0; i < items.length; i++) {
         myTable += "<tr>";
-        myTable += "<td>" + items[i].name + "</td>";
+        myTable += "<td> <a href=\"javascript:getCategoryId(" + items[i].id + ");\">" + items[i].name + "</td>";
         myTable += "<td>" + items[i].description + "</td>";
         myTable += "<td>";
 
@@ -361,6 +489,7 @@ function listarCategorias(items){
             + "</p>";
         }
         myTable += "</td>";
+        myTable += "<td> <button class=\"btnDelete\" onclick='deleteCategory(" + items[i].id + ")'> Borrar </button></td>";
 
         myTable += "</tr>";        
     }
@@ -409,6 +538,63 @@ function postCategory(){
     else{
         alert("Debe ingresar al menos el nombre de la categoria para ser creada")
     }
+}
+
+// Petición PUT
+function updateCategory(){
+
+    let myData ={
+        id: parseInt( $("#id_update").val(), 10),
+        name: $("#name_update").val(),
+        description: $("#description_update").val()
+    };
+
+    let dataToSend = JSON.stringify(myData);
+
+    $.ajax({
+        url : URL_SERVER + "/api/Category/" + "update",
+        type : 'PUT',
+        dataType: '',
+        data: dataToSend,
+        contentType: 'application/json',
+
+        success : function(result,status,xhr) {
+            $("#id_update").val("");
+            $("#name_update").val("");$('#name_update').prop('disabled', true);
+            $("#description_update").val("");$('#description_update').prop('disabled', true);
+
+            $('#btnUpdate').prop('disabled', true);
+
+            alert('Petición de actualización realizada con éxito');
+        },
+        error : function(xhr,status,error) {
+            alert('Ha sucedido un problema en actualizar');
+        },
+        complete : function(result,status) {
+            getCategory();
+            console.log('Actualizar completado');
+        }
+    });
+}
+
+// Petición DELETE
+function deleteCategory( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Category/" + id,
+        type : 'DELETE',
+        dataType : 'JSON',
+        contentType: 'application/json',
+        success : function(respuesta) {
+            alert('Eliminación exitosa de registro')
+            getCategory();
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema al eliminar un registro');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición completada al eliminar un registro');
+        }
+    });
 }
 
 /******************************
