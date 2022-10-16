@@ -42,7 +42,7 @@
     background-color: #45a049;
   }
 
-  input[type=text], input[type=number] {
+  input[type=text], input[type=number]{
     background-color: #dddddd;
     border: 2px solid red;
     color: black;
@@ -122,4 +122,34 @@ select {
   border: 1px solid crimson;
   padding: 4px;
   border-radius: 9px;
+}
+
+.btnActions:disabled {
+  background-color: dimgrey;
+  color: linen;
+  opacity: 1;
+}
+
+.inp_upd:disabled{
+  background-color: #dddddd;
+    border: 2px solid dimgrey;
+    color: black;
+    padding: 5px 5px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    font: 16px;
+    font-size: 16px;
+}
+
+.inp_upd:enabled{
+  background-color: #dddddd;
+    border: 2px solid red;
+    color: black;
+    padding: 5px 5px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
+    font: 16px;
+    font-size: 16px;
 }
