@@ -33,15 +33,6 @@ public class ReservationService {
                 current_time.setTime(current_time.getTime()-5*3600000);
                 reservation.setStartDate(current_time);
             }
-            Date current_time_devolution = new Date();
-            if (reservation.getDevolutionDate() == null){
-                current_time_devolution.setTime(current_time_devolution.getTime()-5*3600000);
-                reservation.setDevolutionDate(current_time_devolution);
-            }
-            else{
-                current_time_devolution.setTime(reservation.getDevolutionDate().getTime());
-                reservation.setDevolutionDate(current_time_devolution);
-            }
             return reservationRepository.save(reservation);
         }
         else{

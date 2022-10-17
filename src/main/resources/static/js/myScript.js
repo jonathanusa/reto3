@@ -611,7 +611,7 @@ function getClient(){
         dataType : 'JSON',
         success : function(respuesta) {
             alert('Lectura de la tabla realizada con éxito');
-            const listaOrdenada = respuesta.sort(function(a, b){return a.id - b.id });
+            const listaOrdenada = respuesta.sort(function(a, b){return a.idClient - b.idClient });
 // #        
             listarClientes(listaOrdenada);
         },
@@ -624,6 +624,33 @@ function getClient(){
     });
 }
 
+// Petición GET con elemento particular
+function getClientId( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Client/" + id,
+        type : 'GET',
+        dataType : 'JSON',
+        success : function(respuesta) {
+
+            alert('Lectura del elemento realizada con exito');
+
+            $("#id_update").val(respuesta.idClient);
+
+            $("#name_update").val(respuesta.name);$('#name_update').prop('disabled', false);
+            $("#email_update").val(respuesta.email);$('#email_update').prop('disabled', true);
+            $("#age_update").val(respuesta.age);$('#age_update').prop('disabled', false);
+            $("#password_update").val(respuesta.password);$('#password_update').prop('disabled', false);
+            $('#btnUpdate').prop('disabled', false);
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema en lectura del elemento');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición de lectura de elemento completada');
+        }
+    });
+}
+
 // Función para crear una tabla con los elementos ordenados en la vista
 
 // #
@@ -632,15 +659,17 @@ function listarClientes(items){
                         <th>NAME</th>\
                         <th>EMAIL</th>\
                         <th>AGE</th>\
+                        <th>DELETE</th>\
                     </tr>';
 // #
     $("#clientTable").empty();
 
     for ( i = 0; i < items.length; i++) {
         myTable += "<tr>";
-        myTable += "<td>" + items[i].name + "</td>";
+        myTable += "<td> <a href=\"javascript:getClientId(" + items[i].idClient + ");\">" + items[i].name + "</td>";
         myTable += "<td>" + items[i].email + "</td>";
         myTable += "<td>" + items[i].age + "</td>";
+        myTable += "<td> <button class=\"btnDelete\" onclick='deleteClient(" + items[i].idClient + ")'> Borrar </button></td>";
         myTable += "</tr>";
     }
 // #
@@ -694,6 +723,67 @@ function postClient(){
     }
 }
 
+// Petición PUT
+function updateClient(){
+
+    let myData ={
+        idClient: parseInt( $("#id_update").val(), 10),
+        name: $("#name_update").val(),
+        age: parseInt( $("#age_update").val(), 10),
+        password: $("#password_update").val()
+    };
+
+    let dataToSend = JSON.stringify(myData);
+
+    $.ajax({
+        url : URL_SERVER + "/api/Client/" + "update",
+        type : 'PUT',
+        dataType: '',
+        data: dataToSend,
+        contentType: 'application/json',
+
+        success : function(result,status,xhr) {
+            $("#id_update").val("");
+            $("#name_update").val("");$('#name_update').prop('disabled', true);
+            $("#email_update").val("");$('#email_update').prop('disabled', true);
+            $("#age_update").val("");$('#age_update').prop('disabled', true);
+            $("#password_update").val("");$('#password_update').prop('disabled', true);
+
+            $('#btnUpdate').prop('disabled', true);
+
+            alert('Petición de actualización realizada con éxito');
+        },
+        error : function(xhr,status,error) {
+            alert('Ha sucedido un problema en actualizar');
+        },
+        complete : function(result,status) {
+            getClient();
+            console.log('Actualizar completado');
+        }
+    });
+}
+
+// Petición DELETE
+function deleteClient( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Client/" + id,
+        type : 'DELETE',
+        dataType : 'JSON',
+        contentType: 'application/json',
+        success : function(respuesta) {
+            alert('Eliminación exitosa de registro')
+            getClient();
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema al eliminar un registro');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición completada al eliminar un registro');
+        }
+    });
+}
+
+
 /*******************************
 ** METODOS DE LA TABLA MESSAGE *
 ********************************/
@@ -708,7 +798,7 @@ function getMessage(){
         dataType : 'JSON',
         success : function(respuesta) {
             alert('Lectura de la tabla realizada con éxito');
-            const listaOrdenada = respuesta.sort(function(a, b){return a.id - b.id });
+            const listaOrdenada = respuesta.sort(function(a, b){return a.idMessage - b.idMessage });
 // #        
             listarMensajes(listaOrdenada);
         },
@@ -721,6 +811,32 @@ function getMessage(){
     });
 }
 
+// Petición GET con elemento particular
+function getMessageId( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Message/" + id,
+        type : 'GET',
+        dataType : 'JSON',
+        success : function(respuesta) {
+
+            alert('Lectura del elemento realizada con exito');
+
+            $("#id_update").val(respuesta.idMessage);
+
+            $("#messageText_update").val(respuesta.messageText);$('#messageText_update').prop('disabled', false);
+            $("#boat_update").val(respuesta.boat.name);$('#boat_update').prop('disabled', true);
+            $("#client_update").val(respuesta.client.name);$('#client_update').prop('disabled', true);
+            $('#btnUpdate').prop('disabled', false);
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema en lectura del elemento');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición de lectura de elemento completada');
+        }
+    });
+}
+
 // Función para crear una tabla con los elementos ordenados en la vista
 
 // #
@@ -729,13 +845,14 @@ function listarMensajes(items){
                         <th>MESSAGE</th>\
                         <th>BOATS</th>\
                         <th>CLIENTS</th>\
+                        <th>DELETE</th>\
                     </tr>';
 // #
     $("#messageTable").empty();
 
     for ( i = 0; i < items.length; i++) {
         myTable += "<tr>";
-        myTable += "<td>" + items[i].messageText + "</td>";
+        myTable += "<td> <a href=\"javascript:getMessageId(" + items[i].idMessage + ");\">" +  items[i].messageText + "</td>";
         myTable += "<td>" + "<strong>name: </strong>" + items[i].boat.name + "; " 
                           + "<strong>brand: </strong>" + items[i].boat.brand + "; "
                           + "<strong>year: </strong>" + items[i].boat.year + "; "
@@ -745,6 +862,8 @@ function listarMensajes(items){
                           + "<strong>email: </strong>" + items[i].client.email + "; "
                           + "<strong>age: </strong>" + items[i].client.age
                           + "</td>";
+
+        myTable += "<td> <button class=\"btnDelete\" onclick='deleteMessage(" + items[i].idMessage + ")'> Borrar </button></td>";
         myTable += "</tr>";
     }
 // #
@@ -794,6 +913,63 @@ function postMessage(){
     }
 }
 
+// Petición PUT
+function updateMessage(){
+
+    let myData ={
+        idMessage: parseInt( $("#id_update").val(), 10),
+        messageText: $("#messageText_update").val()
+    };
+
+    let dataToSend = JSON.stringify(myData);
+
+    $.ajax({
+        url : URL_SERVER + "/api/Message/" + "update",
+        type : 'PUT',
+        dataType: '',
+        data: dataToSend,
+        contentType: 'application/json',
+
+        success : function(result,status,xhr) {
+            $("#id_update").val("");
+            $("#messageText_update").val("");$('#messageText_update').prop('disabled', true);
+            $("#boat_update").val("");$('#boat_update').prop('disabled', true);
+            $("#client_update").val("");$('#client_update').prop('disabled', true);
+
+            $('#btnUpdate').prop('disabled', true);
+
+            alert('Petición de actualización realizada con éxito');
+        },
+        error : function(xhr,status,error) {
+            alert('Ha sucedido un problema en actualizar');
+        },
+        complete : function(result,status) {
+            getMessage();
+            console.log('Actualizar completado');
+        }
+    });
+}
+
+// Petición DELETE
+function deleteMessage( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Message/" + id,
+        type : 'DELETE',
+        dataType : 'JSON',
+        contentType: 'application/json',
+        success : function(respuesta) {
+            alert('Eliminación exitosa de registro')
+            getMessage();
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema al eliminar un registro');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición completada al eliminar un registro');
+        }
+    });
+}
+
 /***********************************
 ** METODOS DE LA TABLA RESERVATION *
 ************************************/
@@ -808,7 +984,7 @@ function getReservation(){
         dataType : 'JSON',
         success : function(respuesta) {
             alert('Lectura de la tabla realizada con éxito');
-            const listaOrdenada = respuesta.sort(function(a, b){return a.id - b.id });
+            const listaOrdenada = respuesta.sort(function(a, b){return a.idReservation - b.idReservation});
 // #        
             listarReservaciones(listaOrdenada);
         },
@@ -817,6 +993,39 @@ function getReservation(){
         },
         complete : function(xhr, status) {
             console.log('Petición completada');
+        }
+    });
+}
+
+// Petición GET con elemento particular
+function getReservationId( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Reservation/" + id,
+        type : 'GET',
+        dataType : 'JSON',
+        success : function(respuesta) {
+
+            alert('Lectura del elemento realizada con exito');
+
+            $("#id_update").val(respuesta.idReservation);
+
+            const date = new Date(respuesta.devolutionDate);
+
+            const day = (date.getDate()+1) < 10 ? '0' + (date.getDate()+1) : (date.getDate()+1)
+            const month = (date.getMonth()+1) < 10 ? '0' + (date.getMonth()+1) : (date.getMonth()+1)
+
+            $("#devolution_date_update").val( date.getFullYear() + "-" + month + "-" + day );$('#devolution_date_update').prop('disabled', false);
+            $("#boat_update").val(respuesta.boat.name);$('#boat_update').prop('disabled', true);
+            $("#client_update").val(respuesta.client.name);$('#client_update').prop('disabled', true);
+            $("#selector_score_update").val(respuesta.score.score+1);$('#selector_score_update').prop('disabled', false);
+            $('#selector_status_update').val(respuesta.status);$('#selector_status_update').prop('disabled',false);
+            $('#btnUpdate').prop('disabled', false);
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema en lectura del elemento');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición de lectura de elemento completada');
         }
     });
 }
@@ -833,13 +1042,14 @@ function listarReservaciones(items){
                         <th>BOAT</th>\
                         <th>CLIENT</th>\
                         <th>SCORE</th>\
+                        <th>DELETE</th>\
                     </tr>';
 // #
     $("#reservationTable").empty();
 
     for ( i = 0; i < items.length; i++) {
         myTable += "<tr>";
-        myTable += "<td>" + items[i].idReservation + "</td>";
+        myTable += "<td> <a href=\"javascript:getReservationId(" + items[i].idReservation + ");\">" + items[i].idReservation + "</td>";
         myTable += "<td>" + items[i].startDate + "</td>";
         myTable += "<td>" + items[i].devolutionDate + "</td>";
         myTable += "<td>" + items[i].status + "</td>";
@@ -855,6 +1065,8 @@ function listarReservaciones(items){
         else{
             myTable += "<td>" + items[i].score.score + "</td>";
         }
+
+        myTable += "<td> <button class=\"btnDelete\" onclick='deleteReservation(" + items[i].idReservation + ")'> Borrar </button></td>";
         myTable += "</tr>";
     }
 // #
@@ -911,6 +1123,70 @@ function postReservation(){
     });
 }
 
+// Petición PUT
+function updateReservation(){
+
+    let myData ={
+        idReservation: parseInt( $("#id_update").val(), 10),
+        devolutionDate: $('#devolution_date_update').val(),
+        status: $("#selector_status_update option:selected").val(),
+        score: { "id": parseInt($("#selector_score_update option:selected").val(), 10)},
+        status: $('#selector_status_update').val()
+    };
+
+    let dataToSend = JSON.stringify(myData);
+
+    $.ajax({
+        url : URL_SERVER + "/api/Reservation/" + "update",
+        type : 'PUT',
+        dataType: '',
+        data: dataToSend,
+        contentType: 'application/json',
+
+        success : function(result,status,xhr) {
+            $("#id_update").val("");
+
+            $("#devolution_date_update").val("");$('#devolution_date_update').prop('disabled', true);
+            $("#boat_update").val("");$('#boat_update').prop('disabled', true);
+            $("#client_update").val("");$('#client_update').prop('disabled', true);
+            $("#client_update").val("");$('#client_update').prop('disabled', true);
+            $("#selector_score_update").val("N/A");$('#selector_score_update').prop('disabled', true);
+            $('#selector_status_update').val("selection_none");$('#selector_status_update').prop('disabled',true);
+
+            $('#btnUpdate').prop('disabled', true);
+
+            alert('Petición de actualización realizada con éxito');
+        },
+        error : function(xhr,status,error) {
+            alert('Ha sucedido un problema en actualizar');
+        },
+        complete : function(result,status) {
+            getReservation();
+            console.log('Actualizar completado');
+        }
+    });
+}
+
+// Petición DELETE
+function deleteReservation( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Reservation/" + id,
+        type : 'DELETE',
+        dataType : 'JSON',
+        contentType: 'application/json',
+        success : function(respuesta) {
+            alert('Eliminación exitosa de registro')
+            getReservation();
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema al eliminar un registro');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición completada al eliminar un registro');
+        }
+    });
+}
+
 /*****************************
 ** METODOS DE LA TABLA ADMIN *
 ******************************/
@@ -938,6 +1214,32 @@ function getAdmin(){
     });
 }
 
+// Petición GET con elemento particular
+function getAdminId( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Admin/" + id,
+        type : 'GET',
+        dataType : 'JSON',
+        success : function(respuesta) {
+
+            alert('Lectura del elemento realizada con exito');
+
+            $("#id_update").val(respuesta.id);
+
+            $("#name_update").val(respuesta.name);$('#name_update').prop('disabled', false);
+            $("#email_update").val(respuesta.email);$('#email_update').prop('disabled', true);
+            $("#password_update").val(respuesta.password);$('#password_update').prop('disabled', false);
+            $('#btnUpdate').prop('disabled', false);
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema en lectura del elemento');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición de lectura de elemento completada');
+        }
+    });
+}
+
 // Función para crear una tabla con los elementos ordenados en la vista
 
 // #
@@ -945,14 +1247,16 @@ function listarAdministradores(items){
     let myTable =  '<tr>\
                         <th>NAME</th>\
                         <th>EMAIL</th>\
+                        <th>DELETE</th>\
                     </tr>';
 // #
     $("#adminTable").empty();
 
     for ( i = 0; i < items.length; i++) {
         myTable += "<tr>";
-        myTable += "<td>" + items[i].name + "</td>";
+        myTable += "<td> <a href=\"javascript:getAdminId(" + items[i].id + ");\">" + items[i].name + "</td>";
         myTable += "<td>" + items[i].email + "</td>";
+        myTable += "<td> <button class=\"btnDelete\" onclick='deleteAdmin(" + items[i].id + ")'> Borrar </button></td>";
         myTable += "</tr>";
     }
 // #
@@ -1002,4 +1306,62 @@ function postAdmin(){
     else{
         alert("Debe ingresar al menos el nombre")
     }
+}
+
+// Petición PUT
+function updateAdmin(){
+
+    let myData ={
+        id: parseInt( $("#id_update").val(), 10),
+        name: $("#name_update").val(),
+        password: $("#password_update").val()
+    };
+
+    let dataToSend = JSON.stringify(myData);
+
+    $.ajax({
+        url : URL_SERVER + "/api/Admin/" + "update",
+        type : 'PUT',
+        dataType: '',
+        data: dataToSend,
+        contentType: 'application/json',
+
+        success : function(result,status,xhr) {
+            $("#id_update").val("");
+            $("#name_update").val("");$('#name_update').prop('disabled', true);
+            $("#email_update").val("");$('#email_update').prop('disabled', true);
+            $("#password_update").val("");$('#password_update').prop('disabled', true);
+
+            $('#btnUpdate').prop('disabled', true);
+
+            alert('Petición de actualización realizada con éxito');
+        },
+        error : function(xhr,status,error) {
+            alert('Ha sucedido un problema en actualizar');
+        },
+        complete : function(result,status) {
+            getAdmin();
+            console.log('Actualizar completado');
+        }
+    });
+}
+
+// Petición DELETE
+function deleteAdmin( id ){
+    $.ajax({
+        url : URL_SERVER + "/api/Admin/" + id,
+        type : 'DELETE',
+        dataType : 'JSON',
+        contentType: 'application/json',
+        success : function(respuesta) {
+            alert('Eliminación exitosa de registro')
+            getAdmin();
+        },
+        error : function(xhr, status) {
+            alert('Ha sucedido un problema al eliminar un registro');
+        },
+        complete : function(xhr, status) {
+            console.log('Petición completada al eliminar un registro');
+        }
+    });
 }
